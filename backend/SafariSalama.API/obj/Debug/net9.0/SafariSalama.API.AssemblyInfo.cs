@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SafariSalama.API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7c25b2e94c4495e8cc251cd374f5c6fd6a8c21a3")]
 [assembly: System.Reflection.AssemblyProductAttribute("SafariSalama.API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SafariSalama.API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
