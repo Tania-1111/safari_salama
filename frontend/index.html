@@ -5,10 +5,50 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Safari Salama</title>
+
+    <!-- Add some quick CSS -->
+    <style>
+      body {
+        margin: 2rem;
+        font-family: Arial, sans-serif;
+        background-color: #166b87ab; /* light background color */
+        background-image: url("/images/Safari salama home page.png"); /* image in public/images */
+        background-size: contain; /* show the full image without stretching */
+        background-position: center;
+        background-repeat: no-repeat; /* prevent image from repeating */
+      }
+
+      #modal-root {
+        background-color: rgba(255, 255, 255, 0.85); /* semi-transparent box */
+        padding: 20px;
+        border-radius: 10px;
+        text-align: center;
+        width: fit-content;
+        margin: 40px auto;
+        font-size: 1.5rem;
+        font-weight: bold;
+      }
+
+      img.logo {
+        display: block;
+        margin: 20px auto;
+        width: 150px;
+        height: auto;
+      }
+    </style>
   </head>
   <body>
+    <!-- Your React root -->
     <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
+
+    <!-- A sample image -->
+    <img src="/images/Sand + Stone - Custom Brand Mark for Jewelry Brand Concept by Nicole Nixon.jpeg" alt="Safari Salama Logo" class="logo" />
+
+    <!-- Modal welcome message -->
     <div id="modal-root">Welcome to Safari Salama</div>
+
+    <!-- React entrypoint -->
+    <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
+
