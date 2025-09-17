@@ -2,53 +2,50 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Safari Salama</title>
-
-    <!-- Add some quick CSS -->
     <style>
+      /* Background image fills screen */
       body {
-        margin: 2rem;
+        margin: 0;
+        padding: 0;
+        background: url("/images/school-bus.jpeg") no-repeat center center;
+        background-size: cover; /* fills without stretching */
         font-family: Arial, sans-serif;
-        background-color: #166b87ab; /* light background color */
-        background-image: url("/images/Safari salama home page.png"); /* image in public/images */
-        background-size: contain; /* show the full image without stretching */
-        background-position: center;
-        background-repeat: no-repeat; /* prevent image from repeating */
+        height: 100vh; /* full screen */
+        display: flex;
+        justify-content: center;
+        align-items: flex-end; /* put button at bottom */
       }
 
+      /* Button style */
       #modal-root {
-        background-color: rgba(255, 255, 255, 0.85); /* semi-transparent box */
-        padding: 20px;
-        border-radius: 10px;
-        text-align: center;
-        width: fit-content;
-        margin: 40px auto;
-        font-size: 1.5rem;
+        background-color: rgba(255, 255, 255, 0.85); /* semi-transparent */
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-size: 1.2rem;
         font-weight: bold;
+        margin: 20px;
+        cursor: pointer;
+        border: none;
+        transition: background-color 0.3s ease;
       }
 
-      img.logo {
-        display: block;
-        margin: 20px auto;
-        width: 150px;
-        height: auto;
+      #modal-root:hover {
+        background-color: rgba(255, 255, 255, 1); /* brighter on hover */
       }
     </style>
   </head>
   <body>
-    <!-- Your React root -->
+    <!-- React root -->
     <div id="root"></div>
 
-    <!-- A sample image -->
-    <img src="/images/Sand + Stone - Custom Brand Mark for Jewelry Brand Concept by Nicole Nixon.jpeg" alt="Safari Salama Logo" class="logo" />
-
-    <!-- Modal welcome message -->
-    <div id="modal-root">Welcome to Safari Salama</div>
+    <!-- Button at bottom -->
+    <button id="modal-root">Karibu Twende</button>
 
     <!-- React entrypoint -->
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
+
 
