@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guardian Dashboard - Safari Salama</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            color: #667eea;
+            font-size: 28px;
+        }
+
+        .header-right {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .notification-bell {
+            cursor: pointer;
+            font-size: 24px;
+            position: relative;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #ff4757;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        .logout-btn {
+            background: #ff4757;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .logout-btn:hover {
+            background: #ff3838;
+        }
+
+        /* Main Content */
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
+        }
+
+        /* Students List */
+        .students-section {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .students-section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 22px;
+        }
+
+        .student-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-left: 4px solid #667eea;
+        }
+
+        .student-item:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+
+        .student-item.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .student-name {
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .student-class {
+            font-size: 14px;
+            opacity: 0.7;
+        }
+
+        /* Map & Status */
+        .map-section {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #map {
+            width: 100%;
+            height: 400px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            background: #e9ecef;
+        }
+
+        .bus-info {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .info-label {
+            color: #666;
+            font-weight: bold;
+        }
+
+        .info-value {
+            color: #333;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .status-boarded {
+            background: #2ecc71;
+            color: white;
+        }
+
+        .status-alighted {
+            background: #3498db;
+            color: white;
+        }
+
+        .status-on-route {
+            background: #f39c12;
+            color: white;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            #map {
+                height: 300px;
+            }
+        }
+
+        /* Loading spinner */
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .no-data {
+            text-align: center;
+            color: #999;
+            padding: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🚌 Safari Salama</h1>
+            <div class="header-right">
+                <div class="notification-bell" onclick="loadNotifications()">
+                    🔔
+                    <span class="notification-badge" id="notif-count">0</span>
+                </div>
+                <a href="/logout/" class="logout-btn">Logout</a>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Students List -->
+            <div class="students-section">
+                <h2>Your Students</h2>
+                <div id="students-list">
+                    <div class="spinner"></div>
+                </div>
+            </div>
+
+            <!-- Map & Status -->
+            <div class="map-section">
+                <h2>Real-Time Bus Tracking</h2>
+                <div id="map"></div>
+                <div id="bus-status" class="no-data">Select a student to view bus information</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Google Maps API -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY"></script>
+    
+    <script>
+        let map;
+        let busMarker;
+        let selectedStudentId = null;
+
+        // Initialize map
+        function initMap() {
+            map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 15,
+                center: { lat: -1.2865, lng: 36.8172 }, // Nairobi, Kenya
+                mapTypeControl: true,
+                fullscreenControl: true,
+            });
+        }
+
+        // Load students on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            initMap();
+            loadStudents();
+            loadNotifications();
+            // Refresh bus location every 10 seconds
+            setInterval(updateBusLocation, 10000);
+        });
+
+        // Load students list
+        function loadStudents() {
+            fetch('/guardian/dashboard/')
+                .then(response => response.json())
+                .then(data => {
+                    const studentsList = document.getElementById('students-list');
+                    if (data.students.length === 0) {
+                        studentsList.innerHTML = '<div class="no-data">No students assigned</div>';
+                        return;
+                    }
+
+                    studentsList.innerHTML = data.students.map(student => `
+                        <div class="student-item" onclick="selectStudent(${student.id})">
+                            <div class="student-name">${student.name}</div>
+                            <div class="student-class">Class: ${student.class}</div>
+                        </div>
+                    `).join('');
+
+                    // Load first student by default
+                    if (data.students.length > 0) {
+                        selectStudent(data.students[0].id);
+                    }
+                })
+                .catch(error => console.error('Error loading students:', error));
+        }
+
+        // Select a student and load their bus info
+        function selectStudent(studentId) {
+            selectedStudentId = studentId;
+
+            fetch(`/guardian/student/${studentId}/status/`)
+                .then(response => response.json())
+                .then(data => {
+                    // Update active student in list
+                    document.querySelectorAll('.student-item').forEach(item => {
+                        item.classList.remove('active');
+                    });
+                    event.target.closest('.student-item').classList.add('active');
+
+                    // Update bus status
+                    const statusHtml = `
+                        <h3>${data.student.name}</h3>
+                        <div class="bus-info">
+                            <div class="info-row">
+                                <span class="info-label">Bus Registration:</span>
+                                <span class="info-value">${data.bus.registration}</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Bus Status:</span>
+                                <span class="info-value">
+                                    <span class="status-badge status-${data.bus.status}">${data.bus.status.toUpperCase()}</span>
+                                </span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Last Update:</span>
+                                <span class="info-value">${new Date(data.bus.current_location.timestamp).toLocaleTimeString()}</span>
+                            </div>
+                        </div>
+                        <div class="bus-info">
+                            <h4>Current Attendance</h4>
+                            <div class="info-row">
+                                <span class="info-label">Status:</span>
+                                <span class="info-value">
+                                    <span class="status-badge status-${data.last_attendance.status}">${data.last_attendance.status.toUpperCase()}</span>
+                                </span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Location:</span>
+                                <span class="info-value">${data.last_attendance.location}</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Time:</span>
+                                <span class="info-value">${new Date(data.last_attendance.timestamp).toLocaleTimeString()}</span>
+                            </div>
+                        </div>
+                    `;
+
+                    document.getElementById('bus-status').innerHTML = statusHtml;
+
+                    // Update map
+                    updateMapWithBusLocation(data.bus.current_location);
+                })
+                .catch(error => console.error('Error loading student status:', error));
+        }
+
+        // Update bus location on map
+        function updateMapWithBusLocation(location) {
+            const buLocation = { lat: location.latitude, lng: location.longitude };
+
+            map.setCenter(buLocation);
+
+            if (busMarker) {
+                busMarker.setPosition(buLocation);
+            } else {
+                busMarker = new google.maps.Marker({
+                    position: buLocation,
+                    map: map,
+                    title: 'Bus Location',
+                    icon: 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png'
+                });
+            }
+        }
+
+        // Update bus location periodically
+        function updateBusLocation() {
+            if (selectedStudentId) {
+                selectStudent(selectedStudentId);
+            }
+        }
+
+        // Load notifications
+        function loadNotifications() {
+            fetch('/notifications/')
+                .then(response => response.json())
+                .then(data => {
+                    const count = data.notifications.length;
+                    document.getElementById('notif-count').textContent = count;
+
+                    // Show notification alert
+                    if (count > 0) {
+                        alert(`You have ${count} new notifications!`);
+                    }
+                })
+                .catch(error => console.error('Error loading notifications:', error));
+        }
+    </script>
+</body>
+</html>

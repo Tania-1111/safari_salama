@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Register - Safari Salama</title>
+    <link rel="stylesheet" href="/static/css/app.css">
+</head>
+<body>
+    <div class="container" style="max-width:480px;margin:40px auto;padding:20px;">
+        <h1>Create account</h1>
+        <form id="register-form" onsubmit="handleRegister(event)">
+            <div class="form-group">
+                <label>Username</label>
+                <input id="username" required>
+            </div>
+            <div class="form-group">
+                <label>Email</label>
+                <input id="email" type="email" required>
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input id="password" type="password" required>
+            </div>
+            <div class="form-group">
+                <label>Role</label>
+                <select id="user_type">
+                    <option value="guardian">Guardian</option>
+                    <option value="driver">Driver</option>
+                    <option value="attendant">Attendant</option>
+                </select>
+            </div>
+            <button class="btn btn-primary" type="submit">Register</button>
+        </form>
+    </div>
+
+    <script>
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        function handleRegister(e) {
+            e.preventDefault();
+            const payload = {
+                username: document.getElementById('username').value,
+                email: document.getElementById('email').value,
+                password: document.getElementById('password').value,
+                user_type: document.getElementById('user_type').value
+            };
+            fetch('/register/', {
+                method: 'POST',
+                credentials: 'same-origin',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.error) alert('Error: ' + data.error);
+                else { alert('Registered. You can now log in.'); window.location.href = '/login/'; }
+            })
+            .catch(err => alert('Error: ' + err));
+        }
+    </script>
+</body>
+</html>

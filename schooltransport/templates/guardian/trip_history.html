@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Guardian Trip History - Safari Salama</title>
+    <link rel="stylesheet" href="/static/css/app.css">
+</head>
+<body>
+    <header class="site-header">
+        <h1>Guardian Trip History</h1>
+        <nav>
+            <a href="/guardian/">Home</a>
+            <a href="/guardian/dashboard/">Dashboard</a>
+            <a href="/logout/">Logout</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <h2>Your Students' Recent Trips</h2>
+        <div class="list">
+            {% for t in trips %}
+                <div class="student-card">
+                    <div>
+                        <div class="student-name">{{ t.student.user.get_full_name }}</div>
+                        <div class="student-id">{{ t.student.id }} • {{ t.status }}</div>
+                    </div>
+                    <div style="font-size:12px;color:#666;">{{ t.timestamp }} • Bus: {{ t.bus.registration_number }}</div>
+                </div>
+            {% empty %}
+                <p>No trips recorded yet.</p>
+            {% endfor %}
+        </div>
+    </main>
+</body>
+</html>

@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Guardian Dashboard - Safari Salama</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+            color: #333;
+        }
+        header {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        header h1 { font-size: 24px; }
+        header nav a {
+            color: white;
+            margin-left: 20px;
+            text-decoration: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+        header nav a:hover { background: rgba(255,255,255,0.2); }
+        .container { max-width: 1200px; margin: 0 auto; padding: 30px 20px; }
+        .header-section {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+        .header-section h2 { font-size: 20px; margin-bottom: 15px; color: #4CAF50; }
+        .profile-info { display: grid; gap: 10px; }
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .info-label { font-weight: 600; color: #666; }
+        .info-value { color: #333; font-weight: 500; }
+        .quick-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        .stat-box {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .stat-number { font-size: 28px; font-weight: bold; }
+        .stat-label { font-size: 12px; opacity: 0.9; margin-top: 5px; }
+        .section {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .section h2 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #4CAF50;
+            border-bottom: 3px solid #4CAF50;
+            padding-bottom: 10px;
+        }
+        .student-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+        }
+        .student-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #4CAF50;
+            transition: all 0.3s;
+        }
+        .student-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .student-name { font-weight: 600; font-size: 16px; margin-bottom: 8px; }
+        .student-detail {
+            font-size: 13px;
+            color: #666;
+            margin: 5px 0;
+        }
+        .student-detail strong { color: #333; }
+        .btn {
+            padding: 10px 16px;
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+        .status-active { background: #c8e6c9; color: #2e7d32; }
+        .status-inactive { background: #ffccbc; color: #d84315; }
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+        .empty-state-icon { font-size: 48px; margin-bottom: 15px; }
+        
+        /* Messaging Styles */
+        .messaging-container {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 20px;
+            height: 600px;
+        }
+        .attendants-list {
+            background: #f9f9f9;
+            border-radius: 8px;
+            padding: 0;
+            overflow-y: auto;
+            border: 1px solid #e0e0e0;
+        }
+        .attendant-item {
+            padding: 16px;
+            border-bottom: 1px solid #e0e0e0;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .attendant-item:hover {
+            background: #e8f5e9;
+        }
+        .attendant-item.active {
+            background: #4CAF50;
+            color: white;
+            border-bottom-color: #4CAF50;
+        }
+        .attendant-avatar {
+            width: 40px;
+            height: 40px;
+            background: #ddd;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+        .attendant-item.active .attendant-avatar {
+            background: rgba(255,255,255,0.3);
+        }
+        .attendant-info h4 {
+            margin: 0;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        .attendant-info p {
+            margin: 0;
+            font-size: 11px;
+            opacity: 0.8;
+        }
+        .messages-area {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+        }
+        .messages-window {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .message-item {
+            display: flex;
+            margin-bottom: 10px;
+        }
+        .message-item.sent {
+            justify-content: flex-end;
+        }
+        .message-item.received {
+            justify-content: flex-start;
+        }
+        .message-bubble {
+            max-width: 70%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            word-wrap: break-word;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+        .message-item.sent .message-bubble {
+            background: #4CAF50;
+            color: white;
+            border-bottom-right-radius: 2px;
+        }
+        .message-item.received .message-bubble {
+            background: #f0f0f0;
+            color: #333;
+            border-bottom-left-radius: 2px;
+        }
+        .message-time {
+            font-size: 11px;
+            color: #999;
+            margin-top: 4px;
+            text-align: center;
+        }
+        .message-send-area {
+            padding: 16px;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            gap: 10px;
+        }
+        .message-input {
+            flex: 1;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 10px 12px;
+            font-size: 13px;
+            font-family: inherit;
+        }
+        .message-input:focus {
+            outline: none;
+            border-color: #4CAF50;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+        }
+        .btn-send {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .btn-send:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+        }
+        .no-attendants {
+            padding: 40px 20px;
+            text-align: center;
+            color: #999;
+        }
+        .no-messages {
+            padding: 40px 20px;
+            text-align: center;
+            color: #999;
+        }
+        
+        @media (max-width: 768px) {
+            .header-section { grid-template-columns: 1fr; }
+            .student-list { grid-template-columns: 1fr; }
+            .messaging-container {
+                grid-template-columns: 1fr;
+                height: auto;
+            }
+            .attendants-list {
+                display: flex;
+                flex-direction: row;
+                height: auto;
+                max-height: 100px;
+                overflow-x: auto;
+            }
+            .attendant-item {
+                flex-shrink: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>👨‍👩‍👧 Safari Salama - Guardian Dashboard</h1>
+        <nav>
+            <a href="/guardian/trips/">Trip History</a>
+            <a href="/profile/">Profile</a>
+            <a href="/logout/">Logout</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        <!-- Header with Guardian Info & Quick Stats -->
+        <div class="header-section">
+            <div>
+                <h2>👋 Welcome, {{ user.first_name|default:user.username }}!</h2>
+                <div class="profile-info">
+                    <div class="info-row">
+                        <span class="info-label">Guardian ID:</span>
+                        <span class="info-value">#{{ user.id }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Email:</span>
+                        <span class="info-value">{{ user.email }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Phone:</span>
+                        <span class="info-value">{{ user.userprofile.phone_number|default:"Not provided" }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="quick-stats">
+                <div class="stat-box">
+                    <div class="stat-number">{{ students|length }}</div>
+                    <div class="stat-label">Children Registered</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">{{ students|length }}</div>
+                    <div class="stat-label">Active Today</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Students Section -->
+        <div class="section">
+            <h2>👧 Your Children</h2>
+            {% if students %}
+                <div class="student-list">
+                    {% for student in students %}
+                        <div class="student-card" 
+                             data-student-bus-id="{% if student.user.userprofile.bus %}{{ student.user.userprofile.bus.id }}{% endif %}"
+                             data-bus-name="{% if student.user.userprofile.bus %}{{ student.user.userprofile.bus.registration_number }}{% endif %}">
+                            <div class="student-name">{{ student.user.get_full_name }}</div>
+                            <div class="student-detail">
+                                <strong>Student ID:</strong> #{{ student.id }}
+                            </div>
+                            <div class="student-detail">
+                                <strong>School:</strong> {{ student.school.name|default:"Not assigned" }}
+                            </div>
+                            <div class="student-detail">
+                                <strong>Bus Route:</strong> 
+                                {% if student.user.userprofile.bus %}
+                                    {{ student.user.userprofile.bus.route.name|default:"Not assigned" }}
+                                {% else %}
+                                    Not assigned
+                                {% endif %}
+                            </div>
+                            <div class="status-badge status-active">
+                                ✓ Active
+                            </div>
+                            <a href="/guardian/student/{{ student.id }}/status/" class="btn">View Status</a>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <div class="empty-state-icon">👧👦</div>
+                    <p>You haven't registered any children yet.</p>
+                    <p>Contact the school administrator to register your child.</p>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Trip History Section -->
+        <div class="section">
+            <h2>📋 Recent Trips</h2>
+            <p style="color: #666; margin-bottom: 15px;">View your children's transportation history and real-time location tracking.</p>
+            <a href="/guardian/trips/" class="btn" style="width: 200px;">View Full Trip History</a>
+        </div>
+
+        <!-- Bus Location Map -->
+        <div class="section">
+            <h2>📍 Children's Bus Location</h2>
+            <div id="map" style="width: 100%; height: 400px; background: #f0f0f0; border-radius: 8px; overflow: hidden; margin-bottom: 15px;"></div>
+            <p style="font-size: 13px; color: #666;">
+                🚌 Real-time tracking of your child's bus location. Updates automatically every 10 seconds.
+            </p>
+        </div>
+
+        <!-- Alerts & Notifications -->
+        <div class="section">
+            <h2>🔔 Alerts & Notifications</h2>
+            <p style="color: #666;">All trips are going smoothly. No alerts at this time.</p>
+        </div>
+
+        <!-- Messaging Section -->
+        <div class="section">
+            <h2>💬 Message Bus Attendant</h2>
+            <p style="color: #666; margin-bottom: 20px;">Communicate directly with your child's bus attendant for real-time updates.</p>
+            <div class="messaging-container" style="grid-template-columns: 1fr; gap: 20px;">
+                <div id="attendant-info" style="background: #f9f9f9; border-radius: 8px; padding: 16px; display: none; border-left: 4px solid #4CAF50;">
+                    <p style="margin: 0; font-size: 14px; font-weight: 600; color: #333;">
+                        Connected to: <span id="attendant-name-display" style="color: #4CAF50;"></span>
+                    </p>
+                </div>
+                <div class="messages-area">
+                    <div class="messages-window" id="messages-window">
+                        <div class="no-messages">Loading conversation...</div>
+                    </div>
+                    <div class="message-send-area">
+                        <input type="text" id="message-input" class="message-input" placeholder="Type a message..." />
+                        <button class="btn-send" onclick="sendMessage()">Send</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAocVoBhAAuDDTqtQLjD7XJeljcV-pEXEU&v=3.50"></script>
+    <script>
+        // Initialize map for guardian to track children's buses
+        let map;
+        let busMarkers = {};
+        const defaultLocation = { lat: -1.2921, lng: 36.8219 };
+
+        function initGuardianMap() {
+            map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 14,
+                center: defaultLocation,
+                mapTypeId: 'roadmap',
+                styles: [
+                    { featureType: 'water', stylers: [{ color: '#b3d9ff' }] },
+                    { featureType: 'land', stylers: [{ color: '#f3f3f3' }] },
+                    { featureType: 'road', stylers: [{ color: '#ffffff' }] }
+                ]
+            });
+
+            // Get student bus data and place markers
+            const students = document.querySelectorAll('[data-student-bus-id]');
+            students.forEach(student => {
+                const busId = student.getAttribute('data-student-bus-id');
+                const busName = student.getAttribute('data-bus-name');
+                if (busId && busId !== 'None') {
+                    fetchBusLocation(busId, busName);
+                }
+            });
+
+            // Refresh bus locations every 10 seconds
+            setInterval(refreshBusLocations, 10000);
+        }
+
+        function fetchBusLocation(busId, busName) {
+            // Placeholder: In production, fetch from API
+            // For now, use a default location with slight random offset
+            const randomOffset = () => (Math.random() - 0.5) * 0.01;
+            const busLocation = {
+                lat: -1.2921 + randomOffset(),
+                lng: 36.8219 + randomOffset()
+            };
+
+            // Create or update bus marker
+            if (!busMarkers[busId]) {
+                busMarkers[busId] = new google.maps.Marker({
+                    position: busLocation,
+                    map: map,
+                    title: busName || 'Bus ' + busId,
+                    icon: 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png'
+                });
+            } else {
+                busMarkers[busId].setPosition(busLocation);
+            }
+        }
+
+        function refreshBusLocations() {
+            const students = document.querySelectorAll('[data-student-bus-id]');
+            students.forEach(student => {
+                const busId = student.getAttribute('data-student-bus-id');
+                const busName = student.getAttribute('data-bus-name');
+                if (busId && busId !== 'None') {
+                    fetchBusLocation(busId, busName);
+                }
+            });
+        }
+
+        // Initialize map when page loads
+        document.addEventListener('DOMContentLoaded', initGuardianMap);
+        
+        // Messaging functionality
+        let currentAttendantId = null;
+        
+        // Load attendants on page load
+        document.addEventListener('DOMContentLoaded', loadAttendants);
+        
+        function loadAttendants() {
+            // Get attendants from students' buses
+            const students = document.querySelectorAll('[data-student-bus-id]');
+            
+            students.forEach(student => {
+                const busId = student.getAttribute('data-student-bus-id');
+                const busName = student.getAttribute('data-bus-name');
+                
+                if (busId && busId !== 'None' && busId !== '') {
+                    // Fetch attendant for this bus
+                    fetch(`/api/bus/${busId}/attendant/`, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.attendant && data.attendant.id) {
+                            // Store the first attendant we find
+                            if (!currentAttendantId) {
+                                currentAttendantId = data.attendant.id;
+                                
+                                // Show attendant info
+                                document.getElementById('attendant-info').style.display = 'block';
+                                document.getElementById('attendant-name-display').textContent = data.attendant.name;
+                                
+                                // Load messages
+                                loadMessages();
+                            }
+                        }
+                    })
+                    .catch(error => {
+                        if (!currentAttendantId) {
+                            console.log('Could not load attendant:', error);
+                        }
+                    });
+                }
+            });
+        }
+        
+        
+        function loadMessages() {
+            if (!currentAttendantId) return;
+            
+            fetch(`/messages/get/?recipient_id=${currentAttendantId}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                const messagesWindow = document.getElementById('messages-window');
+                messagesWindow.innerHTML = '';
+                
+                if (data.messages.length === 0) {
+                    messagesWindow.innerHTML = '<div class="no-messages">No messages yet. Start a conversation!</div>';
+                    return;
+                }
+                
+                data.messages.forEach(msg => {
+                    const msgDiv = document.createElement('div');
+                    const isSent = msg.sender_id === {{ user.id }};
+                    msgDiv.className = `message-item ${isSent ? 'sent' : 'received'}`;
+                    
+                    const timestamp = new Date(msg.timestamp).toLocaleTimeString();
+                    msgDiv.innerHTML = `
+                        <div>
+                            <div class="message-bubble">${msg.message_text}</div>
+                            <div class="message-time">${timestamp}</div>
+                        </div>
+                    `;
+                    messagesWindow.appendChild(msgDiv);
+                });
+                
+                // Scroll to bottom
+                messagesWindow.scrollTop = messagesWindow.scrollHeight;
+            })
+            .catch(error => console.error('Error loading messages:', error));
+        }
+        
+        function sendMessage() {
+            if (!currentAttendantId) {
+                alert('No attendant available to message');
+                return;
+            }
+            
+            const messageInput = document.getElementById('message-input');
+            const messageText = messageInput.value.trim();
+            
+            if (!messageText) {
+                alert('Please type a message');
+                return;
+            }
+            
+            fetch('/messages/send/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify({
+                    recipient_id: currentAttendantId,
+                    message_text: messageText,
+                    bus_id: null
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    messageInput.value = '';
+                    loadMessages();
+                } else {
+                    alert('Error sending message: ' + data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error sending message');
+            });
+        }
+        
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        
+        // Auto-refresh messages every 3 seconds if attendant is selected
+        setInterval(() => {
+            const messagingSection = document.querySelector('.section:has(#messages-window)');
+            if (messagingSection && currentAttendantId) {
+                loadMessages();
+            }
+        }, 3000);
+    </script>
+    <script src="/static/js/role.js"></script>
+</html>

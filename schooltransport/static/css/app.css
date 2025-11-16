@@ -1,0 +1,15 @@
+/* Basic layout for landing pages */
+body{font-family:Segoe UI, Tahoma, Geneva, Verdana, sans-serif;background:#f4f7fb;color:#333}
+.site-header{display:flex;justify-content:space-between;align-items:center;padding:16px;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.site-header h1{color:#3b5bfd}
+.site-header nav a{margin-left:12px;text-decoration:none;color:#444}
+.container{max-width:1100px;margin:24px auto;padding:16px;background:#fff;border-radius:8px;box-shadow:0 4px 24px rgba(59,91,253,0.06)}
+.profile, .controls, .students, .map, .management{margin-bottom:18px}
+.profile h2,.students h2,.map h2,.management h2{color:#2c3e50}
+.btn{display:inline-block;padding:8px 12px;border-radius:6px;background:#eef2ff;color:#3b5bfd;text-decoration:none;border:1px solid rgba(59,91,253,0.12)}
+.btn-primary{background:#3b5bfd;color:#fff;border:none}
+.btn-secondary{background:#95a5a6;color:#fff;border:none}
+.map-box{width:100%;height:320px;background:#e9eef7;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#6b7aa6}
+.student-card{padding:10px;border-bottom:1px solid #eef2ff;display:flex;justify-content:space-between;align-items:center}
+.student-name{font-weight:600}
+.student-status{font-size:12px;color:#667}

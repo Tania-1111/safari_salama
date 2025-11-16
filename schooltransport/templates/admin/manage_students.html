@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Students - Safari Salama Admin</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+            color: #333;
+        }
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .header h1 { font-size: 24px; }
+        .header a { color: white; text-decoration: none; padding: 8px 16px; border-radius: 4px; background: rgba(255,255,255,0.2); }
+        .header a:hover { background: rgba(255,255,255,0.3); }
+        .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
+        
+        .form-section {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .form-section h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        .form-group label {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #555;
+        }
+        .form-group input, .form-group select {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .btn-primary {
+            background: #3498db;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+        .btn-danger {
+            background: #e74c3c;
+            color: white;
+        }
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+        
+        .students-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .students-table thead {
+            background: #34495e;
+            color: white;
+        }
+        .students-table th, .students-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        .students-table tbody tr:hover {
+            background: #f9f9f9;
+        }
+        
+        .student-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 4px solid #3498db;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .student-info h3 { color: #2c3e50; margin-bottom: 5px; }
+        .student-info p { color: #7f8c8d; font-size: 13px; }
+        
+        .messages {
+            margin-bottom: 20px;
+        }
+        .message {
+            padding: 12px 16px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>👨‍🎓 Manage Students</h1>
+        <a href="{% url 'admin_landing' %}">← Back to Dashboard</a>
+    </div>
+    
+    <div class="container">
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <div class="message {% if message.tags %}{{ message.tags }}{% endif %}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        
+        <!-- Add New Student Form -->
+        <div class="form-section">
+            <h2>➕ Add New Student</h2>
+            <form method="POST">
+                {% csrf_token %}
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>First Name *</label>
+                        <input type="text" name="first_name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Last Name *</label>
+                        <input type="text" name="last_name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Enrollment Number *</label>
+                        <input type="text" name="enrollment_number" placeholder="e.g., STU-001-001" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Class/Form *</label>
+                        <input type="text" name="class_name" placeholder="e.g., Class 1A" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Date of Birth</label>
+                        <input type="date" name="dob">
+                    </div>
+                    <div class="form-group">
+                        <label>Guardian</label>
+                        <select name="guardian_id">
+                            <option value="">-- Select Guardian --</option>
+                            {% for guardian in guardians %}
+                                <option value="{{ guardian.id }}">{{ guardian.get_full_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Bus Assignment</label>
+                        <select name="bus_id">
+                            <option value="">-- Select Bus --</option>
+                            {% for bus in buses %}
+                                <option value="{{ bus.id }}">{{ bus.registration_number }} ({{ bus.driver.get_full_name|default:"No Driver" }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">✓ Add Student</button>
+            </form>
+        </div>
+        
+        <!-- Students List -->
+        <div class="form-section">
+            <h2>📋 Registered Students ({{ students.count }})</h2>
+            {% if students %}
+                <table class="students-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Enrollment #</th>
+                            <th>Class</th>
+                            <th>Bus</th>
+                            <th>Guardian</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for student in students %}
+                            <tr>
+                                <td><strong>{{ student.user.get_full_name }}</strong></td>
+                                <td>{{ student.registration_number }}</td>
+                                <td>{{ student.class_name }}</td>
+                                <td>
+                                    {% if student.bus %}
+                                        {{ student.bus.registration_number }}
+                                    {% else %}
+                                        <span style="color: #e74c3c;">Not Assigned</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if student.guardian %}
+                                        {{ student.guardian.get_full_name }}
+                                    {% else %}
+                                        <span style="color: #e74c3c;">Not Assigned</span>
+                                    {% endif %}
+                                </td>
+                                <td><span style="color: #27ae60;">✓ Active</span></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p style="text-align: center; color: #7f8c8d; padding: 40px;">
+                    No students registered yet. Add your first student using the form above.
+                </p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

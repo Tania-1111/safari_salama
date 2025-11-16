@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Driver Dashboard - Safari Salama</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+            color: #333;
+        }
+        header {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff5252 100%);
+            color: white;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        header h1 { font-size: 24px; }
+        header nav a {
+            color: white;
+            margin-left: 20px;
+            text-decoration: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+        header nav a:hover { background: rgba(255,255,255,0.2); }
+        .container { max-width: 1200px; margin: 0 auto; padding: 30px 20px; }
+        .header-section {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+        .header-section h2 { font-size: 20px; margin-bottom: 15px; color: #ff6b6b; }
+        .profile-info { display: grid; gap: 10px; }
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .info-label { font-weight: 600; color: #666; }
+        .info-value { color: #333; font-weight: 500; }
+        .quick-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        .stat-box {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff5252 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .stat-number { font-size: 28px; font-weight: bold; }
+        .stat-label { font-size: 12px; opacity: 0.9; margin-top: 5px; }
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        @media (max-width: 768px) {
+            .controls { grid-template-columns: 1fr; }
+            .header-section { grid-template-columns: 1fr; }
+        }
+        .btn {
+            padding: 15px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 16px rgba(76, 175, 80, 0.3); }
+        .btn-danger {
+            background: linear-gradient(135deg, #f44336 0%, #da190b 100%);
+            color: white;
+        }
+        .btn-danger:hover { transform: translateY(-2px); box-shadow: 0 8px 16px rgba(244, 67, 54, 0.3); }
+        .btn-secondary {
+            background: linear-gradient(135deg, #2196F3 0%, #0b7dda 100%);
+            color: white;
+        }
+        .btn-secondary:hover { transform: translateY(-2px); box-shadow: 0 8px 16px rgba(33, 150, 243, 0.3); }
+        .section {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .section h2 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #ff6b6b;
+            border-bottom: 3px solid #ff6b6b;
+            padding-bottom: 10px;
+        }
+        .student-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        .student-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #ff6b6b;
+            transition: all 0.3s;
+        }
+        .student-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .student-name { font-weight: 600; margin-bottom: 5px; }
+        .student-id { font-size: 12px; color: #666; }
+        .student-status {
+            margin-top: 8px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .status-boarded { background: #c8e6c9; color: #2e7d32; }
+        .status-waiting { background: #ffe0b2; color: #e65100; }
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+        .empty-state-icon { font-size: 48px; margin-bottom: 15px; }
+        #app-data { display: none; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🚌 Safari Salama - Driver Dashboard</h1>
+        <nav>
+            <a href="/driver/trips/">Trip History</a>
+            <a href="/profile/">Profile</a>
+            <a href="/logout/">Logout</a>
+        </nav>
+    </header>
+
+    <!-- Hidden data container for JavaScript -->
+    <div id="app-data" style="display:none;" data-bus-id="{% if bus %}{{ bus.id }}{% endif %}"></div>
+
+    <div class="container">
+        <!-- Header with Driver Info & Quick Stats -->
+        <div class="header-section">
+            <div>
+                <h2>👋 Welcome, {{ user.first_name|default:user.username }}!</h2>
+                <div class="profile-info">
+                    <div class="info-row">
+                        <span class="info-label">Driver ID:</span>
+                        <span class="info-value">#{{ user.id }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Bus:</span>
+                        <span class="info-value">{{ bus.registration_number|default:"Not assigned" }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Route:</span>
+                        <span class="info-value">
+                            {% if bus %}
+                                {{ bus.route.name|default:"Not assigned" }}
+                            {% else %}
+                                Not assigned
+                            {% endif %}
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="quick-stats">
+                <div class="stat-box">
+                    <div class="stat-number">{{ students|length }}</div>
+                    <div class="stat-label">Students Assigned</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">{{ students|length }}</div>
+                    <div class="stat-label">Total Capacity</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Trip Controls -->
+        <div class="controls">
+            <button id="start-trip" class="btn btn-primary">▶ Start Trip</button>
+            <button id="end-trip" class="btn btn-danger">⏹ End Trip</button>
+            <a href="/driver/trips/" class="btn btn-secondary">📋 Trip History</a>
+        </div>
+
+        <!-- Students Section -->
+        <div class="section">
+            <h2>👥 Students Assigned to Your Bus</h2>
+            {% if students %}
+                <div class="student-list">
+                    {% for student in students %}
+                        <div class="student-card">
+                            <div class="student-name">{{ student.user.get_full_name }}</div>
+                            <div class="student-id">Student ID: #{{ student.id }}</div>
+                            <div class="student-status {% if student.is_boarded %}status-boarded{% else %}status-waiting{% endif %}">
+                                {% if student.is_boarded %}✓ Boarded{% else %}⏳ Waiting{% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <div class="empty-state-icon">👨‍👩‍👧</div>
+                    <p>No students assigned to your bus yet.</p>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- GPS Tracking Map -->
+        <div class="section">
+            <h2>📍 Real-time GPS Tracking</h2>
+            <div id="map" style="width: 100%; height: 400px; background: #f0f0f0; border-radius: 8px; overflow: hidden;"></div>
+            <p style="margin-top: 15px; font-size: 13px; color: #666;">
+                📌 Your bus location updates in real-time. Enable location sharing on your device to track your route.
+            </p>
+        </div>
+    </div>
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAocVoBhAAuDDTqtQLjD7XJeljcV-pEXEU&v=3.50"></script>
+    <script>
+        // Initialize map with default location (Nairobi)
+        let map;
+        let driverMarker;
+        const defaultLocation = { lat: -1.2921, lng: 36.8219 };
+
+        function initMap() {
+            map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 15,
+                center: defaultLocation,
+                mapTypeId: 'roadmap',
+                styles: [
+                    { featureType: 'water', stylers: [{ color: '#b3d9ff' }] },
+                    { featureType: 'land', stylers: [{ color: '#f3f3f3' }] },
+                    { featureType: 'road', stylers: [{ color: '#ffffff' }] }
+                ]
+            });
+
+            // Add driver marker
+            driverMarker = new google.maps.Marker({
+                position: defaultLocation,
+                map: map,
+                title: 'Your Bus Location',
+                icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'
+            });
+
+            // Start real-time location tracking
+            startLocationTracking();
+        }
+
+        function startLocationTracking() {
+            if (navigator.geolocation) {
+                navigator.geolocation.watchPosition(
+                    (position) => {
+                        const { latitude, longitude, accuracy } = position.coords;
+                        const busLocation = { lat: latitude, lng: longitude };
+
+                        // Update map marker
+                        driverMarker.setPosition(busLocation);
+                        map.panTo(busLocation);
+
+                        // Send location to server
+                        fetch('/driver/location/update/', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                bus_id: document.getElementById('app-data').dataset.busId,
+                                latitude: latitude,
+                                longitude: longitude,
+                                accuracy: accuracy
+                            })
+                        }).catch(err => console.log('Location update failed:', err));
+                    },
+                    (error) => console.log('Geolocation error:', error),
+                    { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
+                );
+            }
+        }
+
+        // Initialize map when page loads
+        document.addEventListener('DOMContentLoaded', initMap);
+    </script>
+    <script src="/static/js/role.js"></script>

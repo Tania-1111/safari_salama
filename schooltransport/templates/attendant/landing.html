@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendant Dashboard - Safari Salama</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo {
+            font-size: 32px;
+        }
+
+        .header-title h1 {
+            font-size: 24px;
+            margin: 0;
+        }
+
+        .header-title p {
+            font-size: 12px;
+            opacity: 0.9;
+            margin: 0;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px 12px;
+            border-radius: 20px;
+        }
+
+        .user-profile-avatar {
+            width: 36px;
+            height: 36px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .user-profile-info p {
+            margin: 0;
+            font-size: 12px;
+        }
+
+        .user-profile-info .name {
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .btn {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+
+        .btn-logout {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-logout:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin: 30px 0 20px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .profile-card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            margin-bottom: 30px;
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            color: white;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .profile-info h2 {
+            font-size: 22px;
+            color: #2c3e50;
+            margin: 0 0 8px 0;
+        }
+
+        .profile-detail {
+            display: flex;
+            gap: 30px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .detail-label {
+            font-size: 12px;
+            color: #999;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .detail-value {
+            font-size: 14px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .profile-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+            border: 1px solid #e0e0e0;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .action-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            text-align: center;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+            cursor: pointer;
+        }
+
+        .action-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+            border-color: #667eea;
+        }
+
+        .action-card-icon {
+            font-size: 40px;
+            margin-bottom: 12px;
+        }
+
+        .action-card-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+
+        .action-card-description {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 16px;
+        }
+
+        .action-card .btn {
+            width: 100%;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: #999;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .trip-history {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .trip-history-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 16px;
+        }
+
+        .trip-history-table thead {
+            background: #f9f9f9;
+        }
+
+        .trip-history-table th {
+            padding: 12px;
+            text-align: left;
+            font-size: 12px;
+            font-weight: 700;
+            color: #666;
+            text-transform: uppercase;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .trip-history-table td {
+            padding: 12px;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 13px;
+            color: #333;
+        }
+
+        .trip-history-table tr:hover {
+            background: #f9f9f9;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .status-active {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-inactive {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .status-in-transit {
+            background: #cce5ff;
+            color: #004085;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        @media (max-width: 768px) {
+            .profile-card {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .profile-detail {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .trip-history-table {
+                font-size: 12px;
+            }
+
+            .trip-history-table th,
+            .trip-history-table td {
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-left">
+            <div class="logo">🚌</div>
+            <div class="header-title">
+                <h1>Safari Salama</h1>
+                <p>Bus Attendant Dashboard</p>
+            </div>
+        </div>
+        <div class="header-actions">
+            <div class="user-profile">
+                <div class="user-profile-avatar">👔</div>
+                <div class="user-profile-info">
+                    <p class="name">{{ user.get_full_name|default:"Attendant" }}</p>
+                    <p>Bus Attendant</p>
+                </div>
+            </div>
+            <a href="/logout/" class="btn btn-logout">Logout</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Profile Card -->
+        <div class="profile-card">
+            <div class="profile-avatar">👔</div>
+            <div class="profile-info">
+                <h2>{{ user.get_full_name|default:"Bus Attendant" }}</h2>
+                <div class="profile-detail">
+                    <div class="detail-item">
+                        <span class="detail-label">Employee ID</span>
+                        <span class="detail-value">ATT001</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Email</span>
+                        <span class="detail-value">{{ user.email|default:"N/A" }}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Phone</span>
+                        <span class="detail-value">{{ user.profile.phone_number|default:"N/A" }}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Status</span>
+                        <span class="detail-value"><span class="status-badge status-active">Active</span></span>
+                    </div>
+                </div>
+            </div>
+            <div class="profile-actions">
+                <a href="#" class="btn btn-secondary">Edit Profile</a>
+            </div>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="section-title">📊 Today's Summary</div>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value">0</div>
+                <div class="stat-label">Students Boarded</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">0</div>
+                <div class="stat-label">Students Alighted</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">0</div>
+                <div class="stat-label">Trip Duration (hrs)</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">0</div>
+                <div class="stat-label">Issues Reported</div>
+            </div>
+        </div>
+
+        <!-- Action Cards -->
+        <div class="section-title">🎯 Quick Actions</div>
+        <div class="cards-grid">
+            <div class="action-card">
+                <div class="action-card-icon">👆</div>
+                <div class="action-card-title">Fingerprint Scanner</div>
+                <div class="action-card-description">Mark student attendance biometrically</div>
+                <a href="{% url 'fingerprint_scanner' %}?bus_id=1" class="btn btn-primary">Scan</a>
+            </div>
+            <div class="action-card">
+                <div class="action-card-icon">✅</div>
+                <div class="action-card-title">Check Students</div>
+                <div class="action-card-description">Verify student boarding & alighting</div>
+                <a href="#" class="btn btn-primary">View</a>
+            </div>
+            <div class="action-card">
+                <div class="action-card-icon">📋</div>
+                <div class="action-card-title">Attendance Report</div>
+                <div class="action-card-description">Daily attendance summary</div>
+                <a href="#" class="btn btn-primary">Generate</a>
+            </div>
+            <div class="action-card">
+                <div class="action-card-icon">🚨</div>
+                <div class="action-card-title">Report Issue</div>
+                <div class="action-card-description">Report bus or safety issues</div>
+                <a href="#" class="btn btn-primary">Report</a>
+            </div>
+            <div class="action-card">
+                <div class="action-card-icon">📱</div>
+                <div class="action-card-title">Messages</div>
+                <div class="action-card-description">Communication with drivers</div>
+                <a href="#" class="btn btn-primary">View</a>
+            </div>
+        </div>
+
+        <!-- Trip History -->
+        <div class="section-title">📍 Recent Trip History</div>
+        <div class="trip-history">
+            <table class="trip-history-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Bus Number</th>
+                        <th>Route</th>
+                        <th>Students</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Today, 8:15 AM</td>
+                        <td>KBA-123-XY</td>
+                        <td>Nairobi - Westlands</td>
+                        <td>42/50</td>
+                        <td><span class="status-badge status-active">Completed</span></td>
+                        <td><a href="#" style="color: #667eea; text-decoration: none;">View Details</a></td>
+                    </tr>
+                    <tr>
+                        <td>Yesterday, 8:20 AM</td>
+                        <td>KBA-124-XY</td>
+                        <td>Nairobi - Eastlands</td>
+                        <td>38/45</td>
+                        <td><span class="status-badge status-active">Completed</span></td>
+                        <td><a href="#" style="color: #667eea; text-decoration: none;">View Details</a></td>
+                    </tr>
+                    <tr>
+                        <td>2 days ago, 8:10 AM</td>
+                        <td>KBA-123-XY</td>
+                        <td>Nairobi - Westlands</td>
+                        <td>45/50</td>
+                        <td><span class="status-badge status-active">Completed</span></td>
+                        <td><a href="#" style="color: #667eea; text-decoration: none;">View Details</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

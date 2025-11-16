@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fingerprint Scanner - Safari Salama</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .scanner-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            max-width: 500px;
+            width: 100%;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .scanner-header {
+            margin-bottom: 40px;
+        }
+        
+        .scanner-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+        
+        .scanner-header h1 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .scanner-header p {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .scanner-content {
+            margin-bottom: 30px;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-checkin {
+            background: #2ecc71;
+            color: white;
+        }
+        
+        .btn-checkin:hover {
+            background: #27ae60;
+            transform: translateY(-2px);
+        }
+        
+        .btn-checkout {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        .btn-checkout:hover {
+            background: #c0392b;
+            transform: translateY(-2px);
+        }
+        
+        .fingerprint-area {
+            background: #f5f7fa;
+            border: 3px dashed #667eea;
+            border-radius: 12px;
+            padding: 40px 20px;
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .fingerprint-area:hover {
+            background: #f0f2f7;
+            border-color: #764ba2;
+        }
+        
+        .fingerprint-area.active {
+            background: #e8eaf6;
+            border-color: #764ba2;
+        }
+        
+        .fingerprint-icon {
+            font-size: 60px;
+            margin-bottom: 15px;
+        }
+        
+        .fingerprint-text {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
+        .scanner-input {
+            display: none;
+        }
+        
+        .result {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+            white-space: pre-wrap;
+            text-align: left;
+        }
+        
+        .result.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            display: block;
+        }
+        
+        .result.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            display: block;
+        }
+        
+        .result.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+            display: block;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            color: #667eea;
+            font-weight: bold;
+        }
+        
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .back-btn {
+            background: #95a5a6;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 20px;
+        }
+        
+        .back-btn:hover {
+            background: #7f8c8d;
+        }
+    </style>
+</head>
+<body>
+    <div class="scanner-container">
+        <div class="scanner-header">
+            <div class="scanner-icon">👆</div>
+            <h1>Fingerprint Scanner</h1>
+            <p>Scan student fingerprint to mark attendance</p>
+        </div>
+        
+        <div class="scanner-content">
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button class="btn btn-checkin" onclick="setAction('checkin')">
+                    📍 Check In (Board)
+                </button>
+                <button class="btn btn-checkout" onclick="setAction('checkout')">
+                    📍 Check Out (Alight)
+                </button>
+            </div>
+            
+            <!-- Fingerprint Scanner Area -->
+            <div class="fingerprint-area" id="fingerprintArea" onclick="triggerScanner()">
+                <div class="fingerprint-icon">🔍</div>
+                <div class="fingerprint-text">
+                    <p>Click here or use biometric device</p>
+                    <p style="font-size: 12px; color: #999; margin-top: 10px;">
+                        Tap your finger on the scanner
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Hidden File Input for Simulation -->
+            <input type="file" id="scannerInput" class="scanner-input" accept="image/*" onchange="processFingerprintCapture(event)">
+            
+            <!-- Result Message -->
+            <div class="result" id="resultMessage"></div>
+            
+            <!-- Loading Spinner -->
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Processing fingerprint...</p>
+            </div>
+        </div>
+        
+        <button class="back-btn" onclick="window.history.back()">← Back</button>
+    </div>
+    
+    <script>
+        let currentAction = 'checkin';
+        let busId = '{{ bus_id }}';
+        
+        function setAction(action) {
+            currentAction = action;
+            const msg = action === 'checkin' ? '📍 Check In Mode - Ready to scan' : '📍 Check Out Mode - Ready to scan';
+            showMessage(msg, 'info');
+        }
+        
+        function triggerScanner() {
+            simulateFingerprintCapture();
+        }
+        
+        function simulateFingerprintCapture() {
+            showLoading(true);
+            
+            setTimeout(() => {
+                const fingerprintData = generateFingerprintData();
+                verifyFingerprint(fingerprintData);
+            }, 2000);
+        }
+        
+        function processFingerprintCapture(event) {
+            showLoading(true);
+            
+            const file = event.target.files[0];
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                const fingerprintData = e.target.result;
+                verifyFingerprint(fingerprintData);
+            };
+            
+            reader.readAsDataURL(file);
+        }
+        
+        function generateFingerprintData() {
+            return 'fp_' + Math.random().toString(36).substring(2, 15) + '_' + Date.now();
+        }
+        
+        function verifyFingerprint(fingerprintData) {
+            fetch('{% url "verify_fingerprint" %}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify({
+                    fingerprint_data: fingerprintData,
+                    action: currentAction,
+                    bus_id: busId
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                showLoading(false);
+                
+                if (data.success) {
+                    showMessage(
+                        `✅ ${data.message}\n` +
+                        `Student: ${data.student_name}\n` +
+                        `Match Score: ${data.match_score.toFixed(1)}%`,
+                        'success'
+                    );
+                    
+                    setTimeout(() => {
+                        document.getElementById('resultMessage').style.display = 'none';
+                        document.getElementById('scannerInput').value = '';
+                    }, 2000);
+                } else {
+                    showMessage(`❌ ${data.error}`, 'error');
+                }
+            })
+            .catch(error => {
+                showLoading(false);
+                showMessage(`Error: ${error.message}`, 'error');
+            });
+        }
+        
+        function showMessage(message, type) {
+            const resultEl = document.getElementById('resultMessage');
+            resultEl.textContent = message;
+            resultEl.className = `result ${type}`;
+            resultEl.style.display = 'block';
+        }
+        
+        function showLoading(show) {
+            document.getElementById('loading').style.display = show ? 'block' : 'none';
+        }
+        
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        
+        window.onload = function() {
+            setAction('checkin');
+        };
+    </script>
+</body>
+</html>

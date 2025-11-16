@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Status - Safari Salama</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+
+        .header a {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: white;
+            text-decoration: none;
+            font-size: 24px;
+            background: rgba(255, 255, 255, 0.2);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .header a:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+
+        .content {
+            padding: 40px 30px;
+        }
+
+        .student-info {
+            background: #f9f9f9;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-left: 4px solid #667eea;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: #666;
+            font-size: 13px;
+            text-transform: uppercase;
+        }
+
+        .info-value {
+            color: #333;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .status-container {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 14px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .status-badge.boarded {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+        }
+
+        .status-badge.alighted {
+            background: linear-gradient(135deg, #FF9800 0%, #F57C00 100%);
+        }
+
+        .status-badge.absent {
+            background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+        }
+
+        .status-icon {
+            font-size: 48px;
+            margin-bottom: 5px;
+        }
+
+        .status-text {
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .status-label {
+            font-size: 12px;
+            color: #666;
+            text-transform: uppercase;
+            margin-top: 15px;
+            font-weight: 600;
+        }
+
+        .status-details {
+            background: #f5f7fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .detail-item {
+            margin-bottom: 15px;
+        }
+
+        .detail-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .detail-label {
+            font-size: 12px;
+            color: #999;
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .detail-value {
+            font-size: 14px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .bus-info {
+            background: white;
+            border: 2px solid #667eea;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .bus-info h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .bus-detail {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 13px;
+        }
+
+        .bus-detail:last-child {
+            border-bottom: none;
+        }
+
+        .bus-detail strong {
+            color: #667eea;
+        }
+
+        .biometric-info {
+            background: #e3f2fd;
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            margin-bottom: 30px;
+            border-left: 4px solid #2196F3;
+        }
+
+        .biometric-info p {
+            font-size: 13px;
+            color: #1565c0;
+            margin-bottom: 5px;
+        }
+
+        .biometric-confidence {
+            display: inline-block;
+            background: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            color: #2196F3;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .unverified-badge {
+            display: inline-block;
+            background: #ffebee;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            color: #c62828;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .error-message {
+            background: #ffebee;
+            border-left: 4px solid #f44336;
+            color: #c62828;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .back-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            width: 100%;
+            text-align: center;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .timestamp {
+            font-size: 12px;
+            color: #999;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 600px) {
+            .content {
+                padding: 25px 20px;
+            }
+
+            .header h1 {
+                font-size: 22px;
+            }
+
+            .status-badge {
+                width: 100px;
+                height: 100px;
+            }
+
+            .status-icon {
+                font-size: 40px;
+            }
+
+            .info-row,
+            .bus-detail {
+                flex-direction: column;
+                gap: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <a href="/guardian/">←</a>
+            <h1>Student Status</h1>
+            <p>Real-time tracking from fingerprint device</p>
+        </div>
+
+        <div class="content">
+            {% if error %}
+                <div class="error-message">
+                    <p>⚠️ {{ error }}</p>
+                </div>
+            {% else %}
+                <!-- Student Information -->
+                <div class="student-info">
+                    <div class="info-row">
+                        <span class="info-label">Student Name</span>
+                        <span class="info-value">{{ student.first_name }} {{ student.last_name }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Student ID</span>
+                        <span class="info-value">#{{ student.id }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Class</span>
+                        <span class="info-value">{{ student.standard|default:"--" }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">School</span>
+                        <span class="info-value">{{ student.school.name|default:"--" }}</span>
+                    </div>
+                </div>
+
+                <!-- Status Display -->
+                <div class="status-container">
+                    {% if status == 'BOARDED' %}
+                        <div class="status-badge boarded">
+                            <div class="status-icon">✓</div>
+                            <div class="status-text">BOARDED</div>
+                        </div>
+                    {% elif status == 'ALIGHTED' %}
+                        <div class="status-badge alighted">
+                            <div class="status-icon">↓</div>
+                            <div class="status-text">ALIGHTED</div>
+                        </div>
+                    {% else %}
+                        <div class="status-badge absent">
+                            <div class="status-icon">✗</div>
+                            <div class="status-text">ABSENT</div>
+                        </div>
+                    {% endif %}
+                    <div class="status-label">Today's Status</div>
+                </div>
+
+                <!-- Status Details -->
+                {% if boarded_time %}
+                    <div class="status-details">
+                        {% if status == 'BOARDED' %}
+                            <div class="detail-item">
+                                <div class="detail-label">Boarded Time</div>
+                                <div class="detail-value">{{ boarded_time|time:"H:i:s" }}</div>
+                            </div>
+                        {% elif status == 'ALIGHTED' %}
+                            <div class="detail-item">
+                                <div class="detail-label">Alighted Time</div>
+                                <div class="detail-value">{{ boarded_time|time:"H:i:s" }}</div>
+                            </div>
+                        {% endif %}
+                        <div class="detail-item">
+                            <div class="detail-label">Date</div>
+                            <div class="detail-value">{{ today|date:"D, M d, Y" }}</div>
+                        </div>
+                    </div>
+                {% endif %}
+
+                <!-- Bus Information -->
+                {% if bus %}
+                    <div class="bus-info">
+                        <h3>🚌 Bus Information</h3>
+                        <div class="bus-detail">
+                            <strong>Bus Number</strong>
+                            <span>{{ bus.registration_number }}</span>
+                        </div>
+                        <div class="bus-detail">
+                            <strong>Status</strong>
+                            <span>{% if bus.status %}{{ bus.status|upper }}{% else %}--{% endif %}</span>
+                        </div>
+                        <div class="bus-detail">
+                            <strong>Route</strong>
+                            <span>{{ route_name }}</span>
+                        </div>
+                        {% if bus.driver %}
+                            <div class="bus-detail">
+                                <strong>Driver</strong>
+                                <span>{{ bus.driver.get_full_name|default:"--" }}</span>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endif %}
+
+                <!-- Biometric Verification -->
+                {% if biometric_verified %}
+                    <div class="biometric-info">
+                        <p>✓ Biometrically Verified</p>
+                        <div class="biometric-confidence">
+                            Confidence: {{ biometric_confidence|floatformat:1 }}%
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="biometric-info">
+                        <p>⚠ Verification Pending</p>
+                        <div class="unverified-badge">Not Yet Verified</div>
+                    </div>
+                {% endif %}
+
+                <!-- Back Button -->
+                <a href="/guardian/" class="back-btn">Back to Dashboard</a>
+
+                <div class="timestamp">
+                    Last updated: {{ today|date:"M d, Y" }}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
