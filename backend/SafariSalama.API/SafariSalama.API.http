@@ -1,0 +1,6 @@
+@SafariSalama.API_HostAddress = http://localhost:5197
+
+GET {{SafariSalama.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

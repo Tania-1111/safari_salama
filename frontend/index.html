@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Safari Salama</title>
+    <style>
+      /* Background image fills screen */
+      body {
+        margin: 0;
+        padding: 0;
+        background: url("/images/school-bus.jpeg") no-repeat center center;
+        background-size: cover; /* fills without stretching */
+        font-family: Arial, sans-serif;
+        height: 100vh; /* full screen */
+        display: flex;
+        justify-content: center;
+        align-items: flex-end; /* put button at bottom */
+      }
+
+      /* Button style */
+      #modal-root {
+        background-color: rgba(255, 255, 255, 0.85); /* semi-transparent */
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-size: 1.2rem;
+        font-weight: bold;
+        margin: 20px;
+        cursor: pointer;
+        border: none;
+        transition: background-color 0.3s ease;
+      }
+
+      #modal-root:hover {
+        background-color: rgba(255, 255, 255, 1); /* brighter on hover */
+      }
+    </style>
+  </head>
+  <body>
+    <!-- React root -->
+    <div id="root"></div>
+
+    <!-- Button at bottom -->
+    <button id="modal-root">Karibu Twende</button>
+
+    <!-- React entrypoint -->
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
+
+
